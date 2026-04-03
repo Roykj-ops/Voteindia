@@ -724,7 +724,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut }
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -776,6 +776,22 @@
   }
 
   // ── GOOGLE SIGN IN ──
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  // On page load — check if returning from redirect
+  getRedirectResult(auth).then(async result => {
+    if (result && result.user) {
+      currentUser = result.user;
+      showToast('✅ Google se login ho gaya! ' + currentUser.displayName);
+      await loadVotingScreen();
+    }
+  }).catch(e => {
+    if (e.code && e.code !== 'auth/no-auth-event') {
+      console.error('Redirect result error:', e);
+      showToast('❌ Login nahi hua: ' + e.message, 5000);
+    }
+  });
+
   async function signInWithGoogle() {
     const btn = document.getElementById('google-signin-btn');
     btn.disabled = true;
@@ -783,21 +799,28 @@
 
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      currentUser = result.user;
+      provider.setCustomParameters({ prompt: 'select_account' });
 
-      showToast('✅ Google se login ho gaya! ' + currentUser.displayName);
-      await loadVotingScreen();
+      if (isMobile) {
+        // Mobile: use redirect (popup blocked hota hai)
+        await signInWithRedirect(auth, provider);
+        // Page redirect ho jayega, return ke baad getRedirectResult handle karega
+      } else {
+        // Desktop: popup theek kaam karta hai
+        const result = await signInWithPopup(auth, provider);
+        currentUser = result.user;
+        showToast('✅ Google se login ho gaya! ' + currentUser.displayName);
+        await loadVotingScreen();
+      }
 
     } catch (e) {
       console.error('Google sign-in error:', e);
       let msg = '❌ Login nahi hua. ';
-      if (e.code === 'auth/popup-closed-by-user')      msg += 'Popup band kar diya. Dobara try karo.';
-      else if (e.code === 'auth/popup-blocked')         msg += 'Popup block ho gaya. Browser settings check karo.';
-      else if (e.code === 'auth/cancelled-popup-request') msg += 'Pehle wala popup already open hai.';
+      if (e.code === 'auth/popup-closed-by-user')         msg += 'Popup band kar diya. Dobara try karo.';
+      else if (e.code === 'auth/popup-blocked')            msg += 'Popup block ho gaya.';
+      else if (e.code === 'auth/unauthorized-domain')      msg += 'Domain authorized nahi hai Firebase mein.';
       else msg += e.message;
       showToast(msg, 5000);
-    } finally {
       btn.disabled = false;
       btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;height:20px"> Google se Sign In karo';
     }
