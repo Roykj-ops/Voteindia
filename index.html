@@ -530,7 +530,7 @@
       <div class="tricolor-bar"></div>
       <p>Participate in India's democracy securely from anywhere. Verify via Phone OTP and cast your vote with full confidence.</p>
       <div class="hero-actions">
-        <button class="btn-primary" onclick="goToAuth()">🔐 Vote with Gmail</button>
+        <button class="btn-primary" onclick="goToAuth()">🔐 Vote / Register Karo</button>
         <button class="btn-ghost" onclick="goToAuth()">📋 Check Voter Status</button>
       </div>
     </div>
@@ -547,7 +547,7 @@
     </div>
   </div>
 
-  <!-- SCREEN 2: GOOGLE AUTH -->
+  <!-- SCREEN 2: AUTH (Login / Register tabs) -->
   <div class="screen" id="screen-auth">
     <div class="auth-container">
       <span class="back-link" onclick="showScreen('screen-home')">← Back to Home</span>
@@ -557,27 +557,74 @@
           <div class="step-dot"></div>
           <div class="step-dot"></div>
         </div>
-        <div class="form-header">
-          <h3>🔐 Google se Login Karo</h3>
-          <p>Apne Gmail account se secure login karo. Ek account se sirf ek baar vote kar sakte ho.</p>
+
+        <!-- Tab switcher -->
+        <div style="display:flex;gap:0;margin-bottom:28px;background:rgba(255,255,255,0.04);border-radius:12px;padding:4px">
+          <button id="tab-login" onclick="switchTab('login')" style="flex:1;padding:10px;border:none;border-radius:10px;background:var(--saffron);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s">🔑 Login</button>
+          <button id="tab-register" onclick="switchTab('register')" style="flex:1;padding:10px;border:none;border-radius:10px;background:transparent;color:var(--text-muted);font-family:'Syne',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all 0.2s">📝 Register</button>
         </div>
 
-        <div style="text-align:center;margin:32px 0 24px">
-          <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(255,107,0,0.15),rgba(19,136,8,0.15));border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 20px">🇮🇳</div>
-          <p style="color:var(--text-muted);font-size:14px;line-height:1.7;margin-bottom:32px">
-            Google ka secure OAuth login use hoga.<br>Koi password yaad nahi rakhna!
+        <!-- LOGIN FORM -->
+        <div id="login-form">
+          <div class="form-header">
+            <h3>🔑 Login Karo</h3>
+            <p>Pehle se registered ho? Email aur password se login karo.</p>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="login-email" placeholder="aapka@gmail.com" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="••••••••" />
+          </div>
+          <div class="input-error" id="login-error" style="margin-bottom:12px"></div>
+          <div class="form-actions">
+            <button class="btn-primary" id="login-btn" onclick="loginWithEmail()">🔑 Login Karo</button>
+          </div>
+          <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--text-muted)">
+            Account nahi hai? <span onclick="switchTab('register')" style="color:var(--saffron);cursor:pointer;font-weight:600">Register karo →</span>
           </p>
-          <button id="google-signin-btn" onclick="signInWithGoogle()" style="display:inline-flex;align-items:center;gap:12px;background:white;color:#1f1f1f;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:all 0.2s;width:100%;justify-content:center">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;height:20px"> Google se Sign In karo
-          </button>
         </div>
 
-        <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--navy-border)">
-          <p style="font-size:12px;color:var(--text-muted);line-height:1.7">
-            🔒 Sirf authentication ke liye use hoga &nbsp;|&nbsp; Koi data share nahi hoga<br>
-            ✅ Ek Gmail = Ek Vote — duplicate voting possible nahi
+        <!-- REGISTER FORM -->
+        <div id="register-form" style="display:none">
+          <div class="form-header">
+            <h3>📝 Register Karo</h3>
+            <p>Pehli baar? Aadhaar number, Gmail aur password se account banao.</p>
+          </div>
+          <div class="form-group">
+            <label>Aadhaar Number</label>
+            <input type="text" id="reg-aadhaar" placeholder="XXXX XXXX XXXX" maxlength="14"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'').replace(/(.{4})(?=.)/g,'$1 ').substring(0,14)" />
+            <div class="input-hint">12-digit Aadhaar number</div>
+            <div class="input-error" id="aadhaar-error">Valid 12-digit Aadhaar number chahiye</div>
+          </div>
+          <div class="form-group">
+            <label>Email / Gmail</label>
+            <input type="email" id="reg-email" placeholder="aapka@gmail.com" />
+            <div class="input-error" id="reg-email-error">Valid email chahiye</div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="reg-password" placeholder="Min 6 characters" />
+            <div class="input-hint">Kam se kam 6 characters</div>
+            <div class="input-error" id="reg-password-error">Password kam se kam 6 characters ka hona chahiye</div>
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="reg-confirm" placeholder="Dobara password likho" />
+            <div class="input-error" id="reg-confirm-error">Dono passwords match nahi kar rahe</div>
+          </div>
+          <div class="input-error" id="register-error" style="margin-bottom:12px"></div>
+          <div class="form-actions">
+            <button class="btn-primary" id="register-btn" onclick="registerWithEmail()">📝 Account Banao</button>
+          </div>
+          <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--text-muted)">
+            Pehle se account hai? <span onclick="switchTab('login')" style="color:var(--saffron);cursor:pointer;font-weight:600">← Login karo</span>
           </p>
         </div>
+
       </div>
     </div>
   </div>
@@ -724,7 +771,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut }
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -763,7 +810,6 @@
 
   // ── Expose functions globally ──
   window.goToAuth             = goToAuth;
-  window.signInWithGoogle     = signInWithGoogle;
   window.showScreen           = showScreen;
   window.selectCandidate      = selectCandidate;
   window.selectNOTA           = selectNOTA;
@@ -775,56 +821,139 @@
     showScreen('screen-auth');
   }
 
-  // ── GOOGLE SIGN IN ──
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  // ── TAB SWITCH ──
+  window.switchTab = function(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('login-form').style.display    = isLogin ? 'block' : 'none';
+    document.getElementById('register-form').style.display = isLogin ? 'none'  : 'block';
+    document.getElementById('tab-login').style.background    = isLogin ? 'var(--saffron)' : 'transparent';
+    document.getElementById('tab-login').style.color         = isLogin ? 'white' : 'var(--text-muted)';
+    document.getElementById('tab-register').style.background = isLogin ? 'transparent' : 'var(--saffron)';
+    document.getElementById('tab-register').style.color      = isLogin ? 'var(--text-muted)' : 'white';
+    // Clear errors
+    ['login-error','register-error','aadhaar-error','reg-email-error','reg-password-error','reg-confirm-error'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  };
 
-  // On page load — check if returning from redirect
-  getRedirectResult(auth).then(async result => {
-    if (result && result.user) {
-      currentUser = result.user;
-      showToast('✅ Google se login ho gaya! ' + currentUser.displayName);
-      await loadVotingScreen();
-    }
-  }).catch(e => {
-    if (e.code && e.code !== 'auth/no-auth-event') {
-      console.error('Redirect result error:', e);
-      showToast('❌ Login nahi hua: ' + e.message, 5000);
-    }
-  });
+  // ── REGISTER with Aadhaar + Email + Password ──
+  window.registerWithEmail = async function() {
+    const aadhaar  = document.getElementById('reg-aadhaar').value.replace(/\s/g,'');
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const confirm  = document.getElementById('reg-confirm').value;
+    let valid = true;
 
-  async function signInWithGoogle() {
-    const btn = document.getElementById('google-signin-btn');
+    // Aadhaar validate
+    const aadhaarErr = document.getElementById('aadhaar-error');
+    if (!/^\d{12}$/.test(aadhaar)) {
+      aadhaarErr.style.display = 'block'; valid = false;
+    } else { aadhaarErr.style.display = 'none'; }
+
+    // Email validate
+    const emailErr = document.getElementById('reg-email-error');
+    if (!email || !email.includes('@')) {
+      emailErr.style.display = 'block'; valid = false;
+    } else { emailErr.style.display = 'none'; }
+
+    // Password validate
+    const passErr = document.getElementById('reg-password-error');
+    if (password.length < 6) {
+      passErr.style.display = 'block'; valid = false;
+    } else { passErr.style.display = 'none'; }
+
+    // Confirm validate
+    const confirmErr = document.getElementById('reg-confirm-error');
+    if (password !== confirm) {
+      confirmErr.style.display = 'block'; valid = false;
+    } else { confirmErr.style.display = 'none'; }
+
+    if (!valid) return;
+
+    const btn = document.getElementById('register-btn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Sign in ho raha hai...';
+    btn.innerHTML = '<span class="spinner"></span> Account ban raha hai...';
+    const regErr = document.getElementById('register-error');
+    regErr.style.display = 'none';
 
     try {
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-
-      if (isMobile) {
-        // Mobile: use redirect (popup blocked hota hai)
-        await signInWithRedirect(auth, provider);
-        // Page redirect ho jayega, return ke baad getRedirectResult handle karega
-      } else {
-        // Desktop: popup theek kaam karta hai
-        const result = await signInWithPopup(auth, provider);
-        currentUser = result.user;
-        showToast('✅ Google se login ho gaya! ' + currentUser.displayName);
-        await loadVotingScreen();
+      // Check if Aadhaar already used
+      const aadhaarSnap = await getDoc(doc(db, 'aadhaar_index', aadhaar));
+      if (aadhaarSnap.exists()) {
+        regErr.textContent = '❌ Ye Aadhaar number pehle se registered hai!';
+        regErr.style.display = 'block';
+        return;
       }
 
+      // Create Firebase user
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      currentUser = cred.user;
+
+      // Save Aadhaar index (to prevent duplicate Aadhaar)
+      await setDoc(doc(db, 'aadhaar_index', aadhaar), {
+        uid:       currentUser.uid,
+        email:     email,
+        aadhaarHash: await sha256(aadhaar),
+        createdAt: serverTimestamp()
+      });
+
+      showToast('✅ Account ban gaya! Ab vote karo.', 3000);
+      await loadVotingScreen();
+
     } catch (e) {
-      console.error('Google sign-in error:', e);
-      let msg = '❌ Login nahi hua. ';
-      if (e.code === 'auth/popup-closed-by-user')         msg += 'Popup band kar diya. Dobara try karo.';
-      else if (e.code === 'auth/popup-blocked')            msg += 'Popup block ho gaya.';
-      else if (e.code === 'auth/unauthorized-domain')      msg += 'Domain authorized nahi hai Firebase mein.';
+      console.error('Register error:', e);
+      let msg = '❌ Registration nahi hua. ';
+      if (e.code === 'auth/email-already-in-use') msg = '❌ Ye email pehle se registered hai. Login karo.';
+      else if (e.code === 'auth/invalid-email')   msg = '❌ Email galat format mein hai.';
+      else if (e.code === 'auth/weak-password')   msg = '❌ Password zyada strong chahiye.';
       else msg += e.message;
-      showToast(msg, 5000);
+      regErr.textContent = msg;
+      regErr.style.display = 'block';
+    } finally {
       btn.disabled = false;
-      btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;height:20px"> Google se Sign In karo';
+      btn.innerHTML = '📝 Account Banao';
     }
-  }
+  };
+
+  // ── LOGIN with Email + Password ──
+  window.loginWithEmail = async function() {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const loginErr = document.getElementById('login-error');
+    loginErr.style.display = 'none';
+
+    if (!email || !password) {
+      loginErr.textContent = '❌ Email aur password dono bharо.';
+      loginErr.style.display = 'block';
+      return;
+    }
+
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Login ho raha hai...';
+
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      currentUser = cred.user;
+      showToast('✅ Login ho gaya!', 2500);
+      await loadVotingScreen();
+
+    } catch (e) {
+      console.error('Login error:', e);
+      let msg = '❌ Login nahi hua. ';
+      if (e.code === 'auth/user-not-found')    msg = '❌ Ye email registered nahi hai. Pehle register karo.';
+      else if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') msg = '❌ Password galat hai.';
+      else if (e.code === 'auth/invalid-email') msg = '❌ Email galat format mein hai.';
+      else if (e.code === 'auth/too-many-requests') msg = '❌ Bahut zyada attempts. Thodi der baad try karo.';
+      else msg += e.message;
+      loginErr.textContent = msg;
+      loginErr.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '🔑 Login Karo';
+    }
+  };
 
   // ── LOAD VOTE SCREEN ──
   async function loadVotingScreen() {
