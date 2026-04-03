@@ -530,7 +530,7 @@
       <div class="tricolor-bar"></div>
       <p>Participate in India's democracy securely from anywhere. Verify via Phone OTP and cast your vote with full confidence.</p>
       <div class="hero-actions">
-        <button class="btn-primary" onclick="goToAuth()">🔐 Vote with Phone OTP</button>
+        <button class="btn-primary" onclick="goToAuth()">🔐 Vote with Gmail</button>
         <button class="btn-ghost" onclick="goToAuth()">📋 Check Voter Status</button>
       </div>
     </div>
@@ -547,7 +547,7 @@
     </div>
   </div>
 
-  <!-- SCREEN 2: PHONE AUTH -->
+  <!-- SCREEN 2: GOOGLE AUTH -->
   <div class="screen" id="screen-auth">
     <div class="auth-container">
       <span class="back-link" onclick="showScreen('screen-home')">← Back to Home</span>
@@ -558,78 +558,25 @@
           <div class="step-dot"></div>
         </div>
         <div class="form-header">
-          <h3>📱 Phone Verification</h3>
-          <p>Apna mobile number enter karo. Firebase SMS OTP aayega verify karne ke liye.</p>
+          <h3>🔐 Google se Login Karo</h3>
+          <p>Apne Gmail account se secure login karo. Ek account se sirf ek baar vote kar sakte ho.</p>
         </div>
 
-        <div class="form-group">
-          <label>Mobile Number</label>
-          <div class="phone-input-row">
-            <select class="country-select" id="country-code">
-              <option value="+91">🇮🇳 +91</option>
-            </select>
-            <input type="tel" id="phone-input"
-              placeholder="98765 43210" maxlength="10"
-              oninput="this.value=this.value.replace(/\D/g,'')"
-              onkeydown="if(event.key==='Enter')sendFirebaseOTP()" />
-          </div>
-          <div class="input-hint">10-digit Indian mobile number</div>
-          <div class="input-error" id="phone-error">Valid 10-digit number chahiye</div>
-        </div>
-
-        <!-- Firebase reCAPTCHA renders here -->
-        <div id="recaptcha-container"></div>
-
-        <div class="form-actions">
-          <button class="btn-primary" id="send-otp-btn" onclick="sendFirebaseOTP()">
-            📱 Send OTP
+        <div style="text-align:center;margin:32px 0 24px">
+          <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(255,107,0,0.15),rgba(19,136,8,0.15));border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 20px">🇮🇳</div>
+          <p style="color:var(--text-muted);font-size:14px;line-height:1.7;margin-bottom:32px">
+            Google ka secure OAuth login use hoga.<br>Koi password yaad nahi rakhna!
+          </p>
+          <button id="google-signin-btn" onclick="signInWithGoogle()" style="display:inline-flex;align-items:center;gap:12px;background:white;color:#1f1f1f;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:14px 28px;border-radius:12px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:all 0.2s;width:100%;justify-content:center">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;height:20px"> Google se Sign In karo
           </button>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- SCREEN 3: OTP -->
-  <div class="screen" id="screen-otp">
-    <div class="auth-container">
-      <span class="back-link" onclick="goBackToPhone()">← Back</span>
-      <div class="card">
-        <div class="steps-indicator">
-          <div class="step-dot done"></div>
-          <div class="step-dot active"></div>
-          <div class="step-dot"></div>
-        </div>
-        <div class="form-header">
-          <h3>🔐 OTP Verification</h3>
-          <p>6-digit OTP bheja gaya <strong id="masked-mobile">+91 ****XXXX</strong> pe.<br>Phone check karo aur OTP enter karo.</p>
-        </div>
-
-        <div class="form-group">
-          <label>Enter OTP</label>
-          <div class="otp-row">
-            <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,1)" id="otp0" inputmode="numeric">
-            <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,2)" id="otp1" inputmode="numeric">
-            <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,3)" id="otp2" inputmode="numeric">
-            <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,4)" id="otp3" inputmode="numeric">
-            <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,5)" id="otp4" inputmode="numeric">
-            <input type="text" class="otp-box" maxlength="1" oninput="otpMove(this,6)" id="otp5" inputmode="numeric">
-          </div>
-          <div class="input-error" id="otp-error">Invalid OTP. Dobara try karo.</div>
-        </div>
-
-        <div style="text-align:center;margin-bottom:20px">
-          <span id="resend-timer" style="font-size:13px;color:var(--text-muted)">
-            Resend in <span id="timer-count">30</span>s
-          </span>
-          <span id="resend-link" style="font-size:13px;color:var(--saffron);cursor:pointer;display:none" onclick="resendOTP()">
-            🔁 Resend OTP
-          </span>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn-primary" id="verify-otp-btn" onclick="verifyFirebaseOTP()">
-            ✅ Verify & Vote karo
-          </button>
+        <div style="text-align:center;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--navy-border)">
+          <p style="font-size:12px;color:var(--text-muted);line-height:1.7">
+            🔒 Sirf authentication ke liye use hoga &nbsp;|&nbsp; Koi data share nahi hoga<br>
+            ✅ Ek Gmail = Ek Vote — duplicate voting possible nahi
+          </p>
         </div>
       </div>
     </div>
@@ -730,7 +677,7 @@
       <h3>Vote Cast Ho Gaya!</h3>
       <p>Aapka vote securely record ho gaya hai Firebase mein. India ki democracy mein participate karne ke liye shukriya!</p>
       <div class="receipt">
-        <div class="receipt-row"><span class="key">Phone</span><span class="val" id="receipt-phone">—</span></div>
+        <div class="receipt-row"><span class="key">Gmail</span><span class="val" id="receipt-phone">—</span></div>
         <div class="receipt-row"><span class="key">Election</span><span class="val">Lok Sabha GE 2026</span></div>
         <div class="receipt-row"><span class="key">Constituency</span><span class="val">Hyderabad</span></div>
         <div class="receipt-row"><span class="key">Timestamp</span><span class="val" id="receipt-time">—</span></div>
@@ -777,7 +724,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber }
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -809,156 +756,64 @@
   const db   = getFirestore(app);
 
   // ── State ──
-  let confirmResult  = null;
   let currentUser    = null;
-  let timerInterval  = null;
   let selectedName   = '';
   let selectedParty  = '';
   let selectedSymbol = '';
 
   // ── Expose functions globally ──
-  window.goToAuth           = goToAuth;
-  window.sendFirebaseOTP    = sendFirebaseOTP;
-  window.verifyFirebaseOTP  = verifyFirebaseOTP;
-  window.goBackToPhone      = goBackToPhone;
-  window.resendOTP          = resendOTP;
-  window.showScreen         = showScreen;
-  window.selectCandidate    = selectCandidate;
-  window.selectNOTA         = selectNOTA;
-  window.openConfirmModal   = openConfirmModal;
-  window.closeModal         = closeModal;
+  window.goToAuth             = goToAuth;
+  window.signInWithGoogle     = signInWithGoogle;
+  window.showScreen           = showScreen;
+  window.selectCandidate      = selectCandidate;
+  window.selectNOTA           = selectNOTA;
+  window.openConfirmModal     = openConfirmModal;
+  window.closeModal           = closeModal;
   window.submitVoteToFirebase = submitVoteToFirebase;
-
-  window.otpMove = function(el, next) {
-    el.value = el.value.replace(/\D/g, '');
-    if (el.value.length === 1 && next <= 5) {
-      document.getElementById('otp' + next)?.focus();
-    }
-  };
-
-  // ── reCAPTCHA setup ──
-  function setupRecaptcha() {
-    const container = document.getElementById('recaptcha-container');
-    container.innerHTML = ''; // clear old
-    if (window.recaptchaVerifier) {
-      try { window.recaptchaVerifier.clear(); } catch(e) {}
-      window.recaptchaVerifier = null;
-    }
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      size: 'normal',
-      theme: 'dark',
-      callback: () => { /* solved */ },
-      'expired-callback': () => showToast('⚠️ reCAPTCHA expire ho gaya. Dobara solve karo.')
-    });
-    window.recaptchaVerifier.render().catch(err => {
-      console.error('reCAPTCHA render error:', err);
-    });
-  }
 
   function goToAuth() {
     showScreen('screen-auth');
-    setTimeout(setupRecaptcha, 400);
   }
 
-  // ── SEND OTP ──
-  async function sendFirebaseOTP() {
-    const phone = document.getElementById('phone-input').value.trim();
-    const err   = document.getElementById('phone-error');
-
-    if (!/^\d{10}$/.test(phone)) {
-      err.style.display = 'block';
-      document.getElementById('phone-input').classList.add('error');
-      return;
-    }
-    err.style.display = 'none';
-    document.getElementById('phone-input').classList.remove('error');
-
-    const fullPhone = '+91' + phone;
-    const btn = document.getElementById('send-otp-btn');
+  // ── GOOGLE SIGN IN ──
+  async function signInWithGoogle() {
+    const btn = document.getElementById('google-signin-btn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Send ho raha hai...';
+    btn.innerHTML = '<span class="spinner"></span> Sign in ho raha hai...';
 
     try {
-      if (!window.recaptchaVerifier) setupRecaptcha();
-
-      confirmResult = await signInWithPhoneNumber(auth, fullPhone, window.recaptchaVerifier);
-
-      document.getElementById('masked-mobile').textContent =
-        '+91 ' + phone.slice(0,2) + 'XXXX' + phone.slice(-2);
-
-      showToast('📱 OTP bheja gaya +91-' + phone + ' pe!');
-      showScreen('screen-otp');
-      startResendTimer();
-      setTimeout(() => document.getElementById('otp0').focus(), 400);
-
-    } catch (err) {
-      console.error('OTP send error:', err);
-      let msg = '❌ OTP send nahi hua. ';
-      if (err.code === 'auth/invalid-phone-number')    msg += 'Number galat hai.';
-      else if (err.code === 'auth/too-many-requests')  msg += 'Bahut zyada attempts. Thodi der baad try karo.';
-      else if (err.code === 'auth/captcha-check-failed') msg += 'reCAPTCHA fail. Page refresh karo.';
-      else msg += err.message;
-      showToast(msg, 5000);
-
-      // reset recaptcha
-      try { window.recaptchaVerifier?.clear(); } catch(e) {}
-      window.recaptchaVerifier = null;
-      setTimeout(setupRecaptcha, 500);
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '📱 Send OTP';
-    }
-  }
-
-  // ── VERIFY OTP ──
-  async function verifyFirebaseOTP() {
-    const otp = [0,1,2,3,4,5].map(i => document.getElementById('otp'+i).value).join('');
-    const err = document.getElementById('otp-error');
-
-    if (otp.length < 6) {
-      err.style.display = 'block';
-      err.textContent = 'Poora 6-digit OTP dalo.';
-      return;
-    }
-
-    const btn = document.getElementById('verify-otp-btn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Verify ho raha hai...';
-
-    try {
-      const result = await confirmResult.confirm(otp);
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
       currentUser = result.user;
 
-      err.style.display = 'none';
-      [0,1,2,3,4,5].forEach(i => document.getElementById('otp'+i).classList.remove('error'));
-      clearInterval(timerInterval);
-
-      showToast('✅ Phone verify ho gaya!');
+      showToast('✅ Google se login ho gaya! ' + currentUser.displayName);
       await loadVotingScreen();
 
     } catch (e) {
-      console.error('OTP verify error:', e);
-      err.style.display = 'block';
-      if (e.code === 'auth/invalid-verification-code') err.textContent = 'OTP galat hai. Dobara check karo.';
-      else if (e.code === 'auth/code-expired')          err.textContent = 'OTP expire ho gaya. Naya mangao.';
-      else                                               err.textContent = 'Verification fail. Try again.';
-      [0,1,2,3,4,5].forEach(i => document.getElementById('otp'+i).classList.add('error'));
+      console.error('Google sign-in error:', e);
+      let msg = '❌ Login nahi hua. ';
+      if (e.code === 'auth/popup-closed-by-user')      msg += 'Popup band kar diya. Dobara try karo.';
+      else if (e.code === 'auth/popup-blocked')         msg += 'Popup block ho gaya. Browser settings check karo.';
+      else if (e.code === 'auth/cancelled-popup-request') msg += 'Pehle wala popup already open hai.';
+      else msg += e.message;
+      showToast(msg, 5000);
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '✅ Verify & Vote karo';
+      btn.innerHTML = '<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px;height:20px"> Google se Sign In karo';
     }
   }
 
   // ── LOAD VOTE SCREEN ──
   async function loadVotingScreen() {
     showScreen('screen-vote');
-    const phone = currentUser.phoneNumber || 'Unknown';
+    const name  = currentUser.displayName || 'Voter';
+    const email = currentUser.email || 'Unknown';
 
     // Set voter info
-    document.getElementById('voter-avatar').textContent = phone.slice(-4,-2);
-    document.getElementById('voter-display-name').textContent = phone;
+    document.getElementById('voter-avatar').textContent = name.slice(0,2).toUpperCase();
+    document.getElementById('voter-display-name').textContent = name;
     document.getElementById('voter-id-num').textContent = Math.floor(1000 + Math.random()*9000);
-    document.getElementById('receipt-phone').textContent = phone.slice(0,5) + 'XXXXX';
+    document.getElementById('receipt-phone').textContent = email;
 
     // Check duplicate vote
     try {
@@ -999,7 +854,7 @@
       // Vote Firestore mein save karo
       await setDoc(voteRef, {
         uid:          currentUser.uid,
-        phone:        currentUser.phoneNumber,
+        email:        currentUser.email,
         candidate:    selectedName,
         party:        selectedParty,
         symbol:       selectedSymbol,
@@ -1033,40 +888,7 @@
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
 
-  // ── RESEND TIMER ──
-  function startResendTimer() {
-    let s = 30;
-    document.getElementById('resend-timer').style.display = 'inline';
-    document.getElementById('resend-link').style.display = 'none';
-    document.getElementById('timer-count').textContent = s;
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      s--;
-      document.getElementById('timer-count').textContent = s;
-      if (s <= 0) {
-        clearInterval(timerInterval);
-        document.getElementById('resend-timer').style.display = 'none';
-        document.getElementById('resend-link').style.display = 'inline';
-      }
-    }, 1000);
-  }
 
-  async function resendOTP() {
-    document.getElementById('resend-link').style.display = 'none';
-    [0,1,2,3,4,5].forEach(i => document.getElementById('otp'+i).value = '');
-    showScreen('screen-auth');
-    showToast('📱 OTP dobara bhejo');
-    setTimeout(setupRecaptcha, 400);
-  }
-
-  function goBackToPhone() {
-    clearInterval(timerInterval);
-    confirmResult = null;
-    try { window.recaptchaVerifier?.clear(); } catch(e) {}
-    window.recaptchaVerifier = null;
-    showScreen('screen-auth');
-    setTimeout(setupRecaptcha, 400);
-  }
 
   // ── UI helpers ──
   function showScreen(id) {
