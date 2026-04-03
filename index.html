@@ -652,7 +652,7 @@
       <div id="voting-form">
         <div class="vote-header">
           <h3>🗳️ Cast Your Vote</h3>
-          <p>Lok Sabha General Election 2026 — Constituency: Hyderabad</p>
+          <p>Lok Sabha General Election 2026 — Constituency: Maharashtra</p>
         </div>
 
         <div class="voter-badge">
@@ -665,16 +665,16 @@
 
         <div class="election-title">
           <h4>18th Lok Sabha General Election</h4>
-          <p>Hyderabad Parliamentary Constituency • Phase 3 • April 2026</p>
+          <p>Maharashtra Parliamentary Constituency • Phase 3 • April 2026</p>
         </div>
 
         <div class="candidates-grid">
-          <div class="candidate-card" onclick="selectCandidate(this,'Prakash Ambedkar','Vanchit Bahujan Aaghadi','🐘')" id="c1">
+          <div class="candidate-card" onclick="selectCandidate(this,'Mayawati','Bahujan Samaj Party','🐘')" id="c1">
             <div class="select-indicator"></div>
             <div class="candidate-symbol">🐘</div>
-            <div class="candidate-name">Prakash Ambedkar</div>
-            <div class="candidate-party">Vanchit Bahujan Aaghadi (VBA)</div>
-            <div class="candidate-constituency">National President</div>
+            <div class="candidate-name">Mayawati</div>
+            <div class="candidate-party">Bahujan Samaj Party (BSP)</div>
+            <div class="candidate-constituency">BSP Supremo</div>
           </div>
           <div class="candidate-card" onclick="selectCandidate(this,'Eknath Shinde','Shivsena (Shinde Gat)','🏹')" id="c2">
             <div class="select-indicator"></div>
@@ -726,7 +726,7 @@
       <div class="receipt">
         <div class="receipt-row"><span class="key">Gmail</span><span class="val" id="receipt-phone">—</span></div>
         <div class="receipt-row"><span class="key">Election</span><span class="val">Lok Sabha GE 2026</span></div>
-        <div class="receipt-row"><span class="key">Constituency</span><span class="val">Hyderabad</span></div>
+        <div class="receipt-row"><span class="key">Constituency</span><span class="val">Maharashtra</span></div>
         <div class="receipt-row"><span class="key">Timestamp</span><span class="val" id="receipt-time">—</span></div>
         <div class="receipt-row"><span class="key">Status</span><span class="val green">✓ Firebase mein recorded</span></div>
       </div>
@@ -1010,7 +1010,7 @@
         candidate:    selectedName,
         party:        selectedParty,
         symbol:       selectedSymbol,
-        constituency: 'Hyderabad',
+        constituency: 'Maharashtra',
         election:     'Lok Sabha GE 2026',
         timestamp:    serverTimestamp(),
         voterHash:    await sha256(currentUser.uid)
